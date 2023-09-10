@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Mi Calculadora</string>
+    <string name="result_value">0</string>
+    <string name="one_value">1</string>
+    <string name="two_value">2</string>
+    <string name="three_value">3</string>
+    <string name="fourth_value">4</string>
+    <string name="five_value">5</string>
+    <string name="six_value">6</string>
+    <string name="seven_value">7</string>
+    <string name="eight_value">8</string>
+    <string name="nine_value">9</string>
+    <string name="calculator_name">Mi Calculadora</string>
+    <string name="addition_value">+</string>
+    <string name="subtract_value">-</string>
+    <string name="multiplication_value">*</string>
+    <string name="point_value">.</string>
+    <string name="zero_value">0</string>
+    <string name="same_value">=</string>
+    <string name="division_value" >/</string>
+    <string name="result" />
+</resources>
