@@ -4,9 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.micalculadora.databinding.ActivityMainBinding
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     //Comentario de prueba
+    private lateinit var mainBinding: ActivityMainBinding
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var textView: TextView
 
     fun updateText(textView: TextView, num: String, boton: Button) {
@@ -21,48 +27,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun calculateOperation(operation: String): Double {
-        // Divide la cadena en función del operador (+, -, *, /)
-        val fractions = operation.split("[+\\-*/]".toRegex())
-
-        // Solo permite hacer una operación simple
-        if (fractions.size != 2) {
-            return Double.NaN
-        }
-
-        val number_1 = fractions[0].trim().toDoubleOrNull()
-        val number_2 = fractions[1].trim().toDoubleOrNull()
-
-        // Error en número nulo
-        if (number_1 == null || number_2 == null) {
-            return Double.NaN
-        }
-
-        // Encuentra el operador en la cadena original
-        val operator = operation.find { it in "+-*/" } ?: return Double.NaN
-
-        // Realiza la operación matemática
-        return when (operator) {
-            '+' -> number_1 + number_2
-            '-' -> number_1 - number_2
-            '*' -> number_1 * number_2
-            '/' -> {
-                if (number_2 != 0.0) {
-                    number_1 / number_2
-                } else {
-                    Double.NaN // error división por cero
-                }
-            }
-            else -> Double.NaN
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = mainBinding.root
+        setContentView(view)
+        //val view = mainBinding.root
         textView = findViewById(R.id.result_textView)
+
+        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         val button_0 = findViewById<Button>(R.id.zero_button)
         updateText(textView,"0",button_0)
@@ -96,9 +70,23 @@ class MainActivity : AppCompatActivity() {
         updateText(textView,"/", division)
         val same = findViewById<Button>(R.id.same_button)
 
+        val resultObserver = Observer<Double> { resultado ->
+            textView.setText((resultado.toString()))
+        }
+
+        mainViewModel.result.observe(this,resultObserver)
+
+        val errorMsgObserver = Observer<String> { errorMsg ->
+            Snackbar.make(view,errorMsg, Snackbar.LENGTH_INDEFINITE)
+                .setAction("Aceptar"){ }
+                .show()
+        }
+
+        mainViewModel.errorMsg.observe(this,errorMsgObserver)
+
         same.setOnClickListener {
-            val actualText = textView.text.toString()
-            textView.text = (calculateOperation(actualText)).toString()
+            val textoActual = textView.text.toString()
+           mainViewModel.calculateOperation(textoActual)
 
         }
     }
