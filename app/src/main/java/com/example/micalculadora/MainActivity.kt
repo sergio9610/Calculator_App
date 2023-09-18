@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
-
+    //Comentario de prueba
     private lateinit var textView: TextView
 
     fun updateText(textView: TextView, num: String, boton: Button) {
