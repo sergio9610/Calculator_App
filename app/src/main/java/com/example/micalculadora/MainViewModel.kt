@@ -14,6 +14,19 @@ class MainViewModel: ViewModel() {
 
     private val _errorMsg: MutableLiveData<String> = MutableLiveData()
     val errorMsg: LiveData<String> = _errorMsg
+
+    fun updateText(textView: TextView, num: String, boton: Button) {
+        boton.setOnClickListener {
+            // Establece el valor del TextView al presionar el botón
+            val actualText = textView.text.toString()
+            val concatenation = num
+            val newText = "$actualText$concatenation" // se realiza una concatenación
+
+            // Establece el nuevo texto en el TextView
+            textView.text = newText
+        }
+    }
+
     fun calculateOperation(operation: String): Double {
         if(operation.isEmpty()){
             _errorMsg.value = "Debe digitar dos números"
